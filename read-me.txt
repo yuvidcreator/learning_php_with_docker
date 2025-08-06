@@ -1,0 +1,2 @@
+# Want Debugging or Logs?
+docker-compose logs -f php_learning_app

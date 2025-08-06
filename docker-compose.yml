@@ -1,0 +1,39 @@
+
+services:
+  php_learning_app:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile
+    container_name: php_app_learning_local
+    restart: unless-stopped
+    working_dir: /var/www/app
+    volumes:
+      - ./src:/var/www/app          # ./src folder to mount
+      - ./logs:/var/log/app         # log folder to mount
+      - ./output:/var/www/output    # output folder to mount
+    ports:
+      - "9000:9000"
+    environment:
+      PHP_IDE_CONFIG: "serverName=localhost"
+    networks:
+      - php-learning-local-net
+
+  php_learning_app_nginx:
+    image: nginx:stable
+    container_name: nginx_php_learning_local_server
+    restart: unless-stopped
+    ports:
+      - "8080:80"     # ← Port Mapping -> localhost:8080 to container:80
+    volumes:
+      - ./Docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./Docker/nginx/conf.d:/etc/nginx/conf.d:ro            # Place more site configs in ./Docker/nginx/conf.d/*.conf
+      - ./src:/var/www/app
+      - ./logs:/var/log/app
+    depends_on:
+      - php_learning_app
+    networks:
+      - php-learning-local-net
+
+networks:
+  php-learning-local-net:
+    driver: bridge

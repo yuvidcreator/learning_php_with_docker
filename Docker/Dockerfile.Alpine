@@ -1,0 +1,82 @@
+FROM php:8.3-fpm-alpine
+
+# Create a non-root user
+ARG USER=appuser
+ARG UID=1000
+ARG GID=1000
+
+RUN addgroup -g $GID $USER && \
+    adduser -D -G $USER -u $UID $USER 
+
+# Install required Alpine packages
+RUN apk add --no-cache \
+    $PHPIZE_DEPS \
+    bash \
+    nginx \
+    libzip-dev \
+    zip \
+    unzip \
+    curl \
+    openssl \
+    icu-dev \
+    zlib-dev \
+    oniguruma-dev \
+    libpng-dev \
+    libxml2-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    libxpm-dev \
+    bzip2-dev \
+    shadow \
+    nano
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    --with-xpm && \
+    docker-php-ext-install -j$(nproc) \
+    gd \
+    intl \
+    pdo \
+    pdo_mysql \
+    zip \
+    opcache \
+    bcmath \
+    mysqli
+
+# Install and enable Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# Copy custom.ini & xdebug.ini config files
+COPY ./Docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
+COPY ./Docker/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+# Create log/output directories (optional if you're mounting volumes)
+RUN mkdir -p /var/www/app/logs /var/www/app/output
+
+# Fix permissions for asset files
+RUN find ./src/public/assets -type f -exec chmod 777 {} \; && \
+    find ./src/public/assets -type d -exec chmod 777 {} \;
+
+# Fix permissions for asset files
+RUN find ./src/public/output -type f -exec chmod 777 {} \; && \
+    find ./src/public/output -type d -exec chmod 777 {} \;
+
+# Fix permissions for asset files
+RUN find ./src/public/logs -type f -exec chmod 777 {} \; && \
+    find ./src/public/logs -type d -exec chmod 777 {} \;
+
+# Set working directory and permissions
+WORKDIR /var/www/app
+COPY --chown=$USER:$USER . /var/www/app
+
+# Switch to non-root user
+USER $USER
+
+# Expose ports for PHP-FPM and Xdebug (not used directly — nginx handles)
+EXPOSE 9000 9003
+
+CMD ["php-fpm"]

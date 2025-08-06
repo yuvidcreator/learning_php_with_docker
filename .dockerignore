@@ -1,0 +1,34 @@
+# Ignore everything not needed in Docker image
+
+# Git
+.git
+.gitignore
+
+# Docker-specific files
+.dockerignore
+docker-compose.yml
+
+# Node/npm and frontend
+node_modules
+*.log
+
+# Output & logs
+logs/
+output/
+
+# Local environment files
+.env
+.env.*
+
+# OS/editor files
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+.idea
+.vscode
+
+# Tests or build tools (if present)
+tests/
+coverage/
