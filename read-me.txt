@@ -1,2 +1,12 @@
-# Want Debugging or Logs?
-docker-compose logs -f php_learning_app
+# Build Docker images / containers.
+chmod +x build.sh
+
+# Once you have the Docker images, you can run the containers.
+chmod +x run.sh
+
+# If you do any changes in Dockerfile / docker-compose.yml , you need to rebuild the images.
+chmod +x rebuild.sh
+
+# in projects_root _dir, you can use/change the environment variables.
+# Also you can see the logs & output folders.
+# use ./vscode to setup your vscode for xdebug.
