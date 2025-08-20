@@ -42,6 +42,9 @@ RUN mkdir -p /var/www/logs /var/www/output && \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Install PhpSpreadsheet
+RUN composer require phpoffice/phpspreadsheet mpdf/mpdf setasign/fpdi-fpdf
+
 # Switch to non-root user
 USER ${USER}
 

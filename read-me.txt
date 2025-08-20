@@ -10,3 +10,24 @@ chmod +x rebuild.sh
 # in projects_root _dir, you can use/change the environment variables.
 # Also you can see the logs & output folders.
 # use ./vscode to setup your vscode for xdebug.
+
+# Inside container run below command to install php dependencies, packages etc.
+docker exec -it php_app_learning_local bash
+cd /var/www/app
+composer require phpoffice/phpspreadsheet
+composer require mpdf/mpdf
+composer require setasign/fpdi-fpdf
+#This will create a vendor/ folder and composer.json in /src (since that’s your working dir).
+
+
+
+
+
+# Restarting nginx
+e.g.
+MGBiMACmini_0002@MGBIMacmini-001s-Mac-mini Learning % docker ps
+CONTAINER ID   IMAGE                       COMMAND                  CREATED       STATUS          PORTS                    NAMES
+ef53ed19ab22   nginx:stable-alpine         "/bin/sh /etc/nginx/…"   12 days ago   Up 52 minutes   0.0.0.0:8082->80/tcp     local_php_pdf_generator_nginx_server
+5f269bfcc290   nginx:stable                "/docker-entrypoint.…"   2 weeks ago   Up 52 minutes   0.0.0.0:8080->80/tcp     nginx_php_learning_local_server
+95f1b136ea3b   learning-php_learning_app   "docker-php-entrypoi…"   2 weeks ago   Up 52 minutes   0.0.0.0:9000->9000/tcp   php_app_learning_local
+MGBiMACmini_0002@MGBIMacmini-001s-Mac-mini Learning % docker exec nginx_php_learning_local_server nginx -s reload

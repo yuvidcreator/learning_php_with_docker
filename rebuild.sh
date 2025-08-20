@@ -8,5 +8,6 @@ docker builder prune -af
 
 # If you ever do change Dockerfile or need new PHP libs, just run:
 docker-compose down
-# docker-compose build 
+
+# Build new container (one-time builder, & keep running in background)
 docker-compose -f ./docker-compose.yml up -d --build

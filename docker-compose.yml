@@ -11,6 +11,9 @@ services:
       - ./src:/var/www/app          # ./src folder to mount
       - ./logs:/var/log/app         # log folder to mount
       - ./output:/var/www/output    # output folder to mount
+      - ./data:/var/www/data      # 📌 mount JSON + XLSX files
+    env_file:
+      - .env
     ports:
       - "9000:9000"
     environment:

@@ -17,8 +17,8 @@ logs/
 output/
 
 # Local environment files
-.env
-.env.*
+# .env
+# .env.*
 
 # OS/editor files
 *.swp
